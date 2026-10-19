@@ -51,6 +51,13 @@ namespace DSA.Lab00
 
         public bool ContainsName(string name)
         {
+            foreach (var player in _players)
+            {
+                if (player.Name.Equals(name, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
             
             return false;
         }
