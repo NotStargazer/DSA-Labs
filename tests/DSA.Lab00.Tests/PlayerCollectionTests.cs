@@ -73,9 +73,21 @@ public sealed class PlayerCollectionTests
     public void ContainsName_EnsureArgumentIsNullable()
     {
         PlayerCollection collection = CreateCollection();
-        Assert.DoesNotThrow(() => collection.ContainsName(null));
+        Assert.DoesNotThrow(() => collection.ContainsName(null!));
     }
-    
+
+    [Test]
+    public void FindHighestScore_EmptyCollectionDoesNotThrow()
+    {
+        PlayerCollection collection = CreateEmptyCollection();
+        Assert.DoesNotThrow(() => collection.FindById(85));
+    }
+
+    private static PlayerCollection CreateEmptyCollection()
+    {
+        return new PlayerCollection([]);
+    }
+
     private static PlayerCollection CreateCollection()
     {
         return new PlayerCollection(new List<Player>
