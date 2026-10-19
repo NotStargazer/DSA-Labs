@@ -69,6 +69,13 @@ public sealed class PlayerCollectionTests
         Assert.That(contains, Is.False);
     }
 
+    [Test]
+    public void ContainsName_EnsureArgumentIsNullable()
+    {
+        PlayerCollection collection = CreateCollection();
+        Assert.DoesNotThrow(() => collection.ContainsName(null));
+    }
+    
     private static PlayerCollection CreateCollection()
     {
         return new PlayerCollection(new List<Player>
