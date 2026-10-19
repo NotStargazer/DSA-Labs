@@ -32,6 +32,19 @@ namespace DSA.Lab00
 
         public Player? FindHighestScore()
         {
+            if (_players.Count == 0)
+            {
+                return null;
+            }
+            
+            Player highestScorer = _players[0];
+            for (var i = 1; i < _players.Count; i++)
+            {
+                if (_players[i].Score > highestScorer.Score)
+                {
+                    highestScorer = _players[i];
+                }
+            }
 
             return highestScorer;
         }
