@@ -11,13 +11,20 @@ namespace DSA.Lab01
                 throw new ArgumentNullException(nameof(values));
             }
 
-            // TODO: Sort the array in ascending order using insertion sort.
-            //
-            // Think of values[0..i-1] as the already-sorted part.
-            // For each next value:
-            // 1. Store the value you want to insert.
-            // 2. Shift larger values one position to the right.
-            // 3. Put the stored value into the gap.
+            for (var i = 1; i < values.Length; i++)
+            {
+                if (values[i - 1] > values[i])
+                {
+                    for (var j = i; j >= 1; j--)
+                    {
+                        if (values[j - 1] < values[j])
+                        {
+                            break;
+                        }
+                        (values[j - 1], values[j]) = (values[j], values[j - 1]);
+                    }
+                }
+            }
         }
     }
 }
