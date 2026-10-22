@@ -45,6 +45,36 @@ namespace DSA.Lab01.Tests
 
             Assert.That(result, Is.EqualTo(4));
         }
+        
+        [Test]
+        public void BinarySearch_TestAllValues()
+        {
+            int[] values = { 2, 5, 8, 12, 16, 23, 38 };
+
+            for (var index = 0; index < values.Length; index++)
+            {
+                int result = SearchAlgorithms.BinarySearch(values, values[index]);
+                Assert.That(result, Is.EqualTo(index));
+            }
+        }
+        
+        [Test]
+        public void BinarySearch_TestSingleValueArray()
+        {
+            int[] values = { 38 };
+
+            int result = SearchAlgorithms.BinarySearch(values, 38);
+            Assert.That(result, Is.EqualTo(0));
+        }
+        
+        [Test]
+        public void BinarySearch_TestDuplicateValues()
+        {
+            int[] values = { 2, 5, 8, 12, 16, 23, 23, 38 };
+
+            int result = SearchAlgorithms.BinarySearch(values, 23);
+            Assert.That(result, Is.EqualTo(5).Or.EqualTo(6));
+        }
 
         [Test]
         public void BinarySearch_FindsFirstElement()
