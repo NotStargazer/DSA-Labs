@@ -29,7 +29,7 @@ namespace DSA.Lab01
                 throw new ArgumentNullException(nameof(sortedValues));
             }
 
-            return BinarySearchStandard(sortedValues, target);
+            //return BinarySearchStandard(sortedValues, target);
             return BinarySearchRecursive(new Span<int>(sortedValues), target);
         }
 
@@ -50,14 +50,17 @@ namespace DSA.Lab01
                     return lower;
                 }
 
-                searchLength >>= 1;
                 if (sortedValues[upper] > target)
                 {
-                    lower -= searchLength;
-                    upper -= searchLength;
+                    searchLength >>= 1;
+                    lower -= searchLength - 1;
+                    upper -= searchLength - 1;
                     continue;
                 }
 
+                var round = searchLength + 1 >> 1;
+                searchLength >>= 1;
+                searchLength += round - searchLength;
                 lower += searchLength - 1;
                 upper += searchLength - 1;
             }
@@ -66,6 +69,12 @@ namespace DSA.Lab01
             {
                 return upper;
             }
+
+            if (lower < 0)
+            {
+                return -1;
+            }
+            
             if (sortedValues[lower] == target)
             {
                 return lower;
