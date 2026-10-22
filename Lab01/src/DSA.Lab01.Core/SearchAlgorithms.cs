@@ -29,16 +29,84 @@ namespace DSA.Lab01
                 throw new ArgumentNullException(nameof(sortedValues));
             }
 
-            // TODO: Implement binary search.
-            // The input to this method is guaranteed to be sorted in ascending order.
-            //
-            // Suggested plan:
-            // 1. Keep track of a low and high index.
-            // 2. Inspect the middle value.
-            // 3. Return the index if it matches.
-            // 4. Otherwise discard either the lower or upper half.
-            // 5. Repeat while there is still a valid search range.
+            return BinarySearchStandard(sortedValues, target);
+            return BinarySearchRecursive(new Span<int>(sortedValues), target);
+        }
+
+        private static int BinarySearchStandard(int[] sortedValues, int target)
+        {
+            var upper = sortedValues.Length >> 1;
+            var lower = upper - 1;
+            var searchLength = sortedValues.Length;
+
+            while (searchLength > 2)
+            {
+                if (sortedValues[upper] == target)
+                {
+                    return upper;
+                }
+                if (sortedValues[lower] == target)
+                {
+                    return lower;
+                }
+
+                searchLength >>= 1;
+                if (sortedValues[upper] > target)
+                {
+                    lower -= searchLength;
+                    upper -= searchLength;
+                    continue;
+                }
+
+                lower += searchLength - 1;
+                upper += searchLength - 1;
+            }
+
+            if (sortedValues[upper] == target)
+            {
+                return upper;
+            }
+            if (sortedValues[lower] == target)
+            {
+                return lower;
+            }
+            
             return -1;
+        }
+
+        private static int BinarySearchRecursive(Span<int> sortedValues, int target, int minIndex = 0)
+        {
+            var upper = sortedValues.Length >> 1;
+            var lower = upper - 1;
+            if (sortedValues[upper] == target)
+            {
+                return upper + minIndex;
+            }
+            if (sortedValues.Length == 1)
+            {
+                return -1;
+            }
+            if (sortedValues[lower] == target)
+            {
+                return lower + minIndex;
+            }
+            if (sortedValues.Length == 2)
+            {
+                return -1;
+            }
+
+            if (sortedValues[upper] > target)
+            {
+                return BinarySearchRecursive(
+                    sortedValues[..lower],
+                    target,
+                    minIndex);
+            }
+
+            return BinarySearchRecursive(
+                sortedValues[upper..],
+                target,
+                upper + minIndex);
         }
     }
 }
