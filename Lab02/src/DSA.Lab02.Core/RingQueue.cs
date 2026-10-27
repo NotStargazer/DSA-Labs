@@ -24,20 +24,34 @@ namespace DSA.Lab02
 
         public void Enqueue(T item)
         {
-            // TODO: write at tail, advance tail with wrap-around, update count.
-            throw new NotImplementedException();
+            if (_count == Capacity)
+            {
+                throw new InvalidOperationException("Added item exceeds capacity of RingQueue");
+            }
+
+            _count++;
+            _items[_tail++] = item;
+            _tail %= Capacity;
         }
 
         public T Peek()
         {
-            // TODO: return the item at head without removing it.
-            throw new NotImplementedException();
+            return _count == 0 
+                ? throw new InvalidOperationException("RingQueue is empty") 
+                : _items[_tail - 1];
         }
 
         public T Dequeue()
         {
-            // TODO: read/clear at head, advance head with wrap-around, update count.
-            throw new NotImplementedException();
+            if (_count == 0)
+            {
+                throw new InvalidOperationException("RingQueue is empty");
+            }
+
+            _count--;
+            var item = _items[_head++];
+            _head %= Capacity;
+            return item;
         }
     }
 }
