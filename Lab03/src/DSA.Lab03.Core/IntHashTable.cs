@@ -27,21 +27,63 @@ namespace DSA.Lab03
 
         public void Set(int key, TValue value)
         {
-            // TODO: search only the correct bucket, replace or append.
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var bucketIndex = key % BucketCount;
+            var bucket = _buckets[bucketIndex];
+            var newEntry = new Entry<TValue>(key, value);
+            for (var i = 0; i < bucket.Count; i++)
+            {
+                var entry = bucket[i];
+                if (entry.Value == null)
+                {
+                    continue;
+                }
+
+                if (entry.Key == key)
+                {
+                    bucket[i] = newEntry;
+                    return;
+                }
+            }
+
+            bucket.Add(newEntry);
+            _count++;
         }
 
         public bool TryGetValue(int key, out TValue value)
         {
-            // TODO: search only the correct bucket.
+            var bucketIndex = GetBucketIndex(key);
+            var bucket = _buckets[bucketIndex];
+            foreach (var entry in bucket)
+            {
+                if (entry.Key == key)
+                {
+                    value = entry.Value;
+                    return true;
+                }
+            }
+
             value = default!;
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool ContainsKey(int key)
         {
-            // TODO: reuse the lookup behavior if useful.
-            throw new NotImplementedException();
+            var bucketIndex = GetBucketIndex(key);
+            var bucket = _buckets[bucketIndex];
+            foreach (var entry in bucket)
+            {
+                if (entry.Key == key)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private int GetBucketIndex(int key)
