@@ -29,42 +29,54 @@ namespace DSA.Lab01
                 throw new ArgumentNullException(nameof(sortedValues));
             }
 
-            return BinarySearchRecursive(new Span<int>(sortedValues), target);
+            //return BinarySearchStandard(sortedValues, target);
+            return BinarySearchRecursive(sortedValues, target, 0, sortedValues.Length - 1);
         }
 
-        private static int BinarySearchRecursive(Span<int> sortedValues, int target, int minIndex = 0)
+        private static int BinarySearchStandard(int[] sortedValues, int target)
         {
-            var upper = sortedValues.Length >> 1;
-            var lower = upper - 1;
-            if (sortedValues[upper] == target)
+            var min = 0;
+            var max = sortedValues.Length - 1;
+            while (min <= max)
             {
-                return upper + minIndex;
+                var centre = min + ((max - min) >> 1);
+                
+                if (sortedValues[centre] == target)
+                {
+                    return centre;
+                }
+                if (sortedValues[centre] < target)
+                {
+                    min = centre + 1;
+                }
+                else
+                {
+                    max = centre - 1;
+                }
             }
-            if (sortedValues.Length == 1)
+
+            return -1;
+        }
+
+        private static int BinarySearchRecursive(int[] sortedValues, int target, int min, int max)
+        {
+            if (min > max)
             {
                 return -1;
             }
-            if (sortedValues[lower] == target)
+            
+            var center = min + ((max - min) >> 1);
+            if (sortedValues[center] == target)
             {
-                return lower + minIndex;
-            }
-            if (sortedValues.Length == 2)
-            {
-                return -1;
+                return center;
             }
 
-            if (sortedValues[upper] > target)
+            if (sortedValues[center] > target)
             {
-                return BinarySearchRecursive(
-                    sortedValues[..lower],
-                    target,
-                    minIndex);
+                return BinarySearchRecursive(sortedValues, target, min, center - 1);
             }
 
-            return BinarySearchRecursive(
-                sortedValues[upper..],
-                target,
-                upper + minIndex);
+            return BinarySearchRecursive(sortedValues, target, center + 1, max);
         }
     }
 }

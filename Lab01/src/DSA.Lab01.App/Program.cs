@@ -23,6 +23,7 @@ Console.WriteLine("Rough search timing (run several times; exact numbers will va
 RunBenchmark(10_000);
 RunBenchmark(100_000);
 RunBenchmark(1_000_000);
+RunBenchmark(1_000_000_000);
 
 static void RunBenchmark(int count)
 {
@@ -48,5 +49,5 @@ static void RunBenchmark(int count)
     sw.Stop();
     double binaryMicroseconds = sw.Elapsed.TotalMicroseconds / repetitions;
 
-    Console.WriteLine($"n={count,9:N0} | linear ~{linearMicroseconds,10:F2} us | binary ~{binaryMicroseconds,10:F2} us");
+    Console.WriteLine($"n={count,13:N0} | linear ~{linearMicroseconds,10:F2} us | binary ~{binaryMicroseconds,10:F2} us");
 }
