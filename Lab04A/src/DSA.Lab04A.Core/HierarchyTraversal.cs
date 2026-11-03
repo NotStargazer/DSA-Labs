@@ -87,9 +87,22 @@ namespace DSA.Lab04A
                 throw new ArgumentNullException(nameof(root));
             }
 
-            // TODO: return values in pre-order:
-            // current node first, then each child subtree from left to right.
-            throw new NotImplementedException();
+            var outList = new List<T>(root.Children.Count + 1) { root.Value };
+            foreach (var child in root.Children)
+            {
+                AddChildrenToList(outList, child);
+            }
+
+            return outList;
+        }
+
+        private static void AddChildrenToList<T>(ICollection<T> collection, HierarchyNode<T> root)
+        {
+            collection.Add(root.Value);
+            foreach (var child in root.Children)
+            {
+                AddChildrenToList(collection, child);
+            }
         }
 
         public static int MaxDepth<T>(HierarchyNode<T> root)
