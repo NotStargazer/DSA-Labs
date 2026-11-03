@@ -90,18 +90,18 @@ namespace DSA.Lab04A
             var outList = new List<T>(root.Children.Count + 1) { root.Value };
             foreach (var child in root.Children)
             {
-                AddChildrenToList(outList, child);
+                AddChildrenToListRecursive(outList, child);
             }
 
             return outList;
         }
 
-        private static void AddChildrenToList<T>(ICollection<T> collection, HierarchyNode<T> root)
+        private static void AddChildrenToListRecursive<T>(ICollection<T> collection, HierarchyNode<T> root)
         {
             collection.Add(root.Value);
             foreach (var child in root.Children)
             {
-                AddChildrenToList(collection, child);
+                AddChildrenToListRecursive(collection, child);
             }
         }
 
@@ -112,9 +112,22 @@ namespace DSA.Lab04A
                 throw new ArgumentNullException(nameof(root));
             }
 
-            // Depth is measured in edges from the root.
-            // A single-node tree therefore has max depth 0.
-            throw new NotImplementedException();
+            var maxDepth = 0;
+            foreach (var child in root.Children)
+            {
+                CheckDepthRecursive(ref maxDepth, child);
+            }
+
+            return maxDepth;
+        }
+
+        private static void CheckDepthRecursive<T>(ref int maxDepth, HierarchyNode<T> root, int depth = 1)
+        {
+            maxDepth = Math.Max(maxDepth, depth);
+            foreach (var child in root.Children)
+            {
+                CheckDepthRecursive(ref maxDepth, child, depth + 1);
+            }
         }
     }
 }
