@@ -29,7 +29,7 @@ namespace DSA.Lab04B
 
         public PriorityEntry<T> PeekNext()
         {
-            if (_heap.Count == 0)
+            if (Count == 0)
             {
                 throw new InvalidOperationException("The dispatch queue is empty.");
             }
@@ -39,13 +39,20 @@ namespace DSA.Lab04B
 
         public PriorityEntry<T> DequeueNext()
         {
-            // TODO:
-            // 1. Reject an empty queue.
-            // 2. Remember the root: that is the minimum.
-            // 3. Move the final heap entry to the root and remove the final slot.
-            // 4. If anything remains, restore the invariant downward.
-            // 5. Return the old root.
-            throw new NotImplementedException();
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("The dispatch queue is empty.");
+            }
+
+            var item = _heap[0];
+            var endIndex = Count - 1;
+            (_heap[0], _heap[endIndex]) = (_heap[endIndex], _heap[0]);
+            _heap.RemoveAt(endIndex);
+            if (Count > 1)
+            {
+                SiftDown(0);
+            }
+            return item;
         }
 
         private void SiftUp(int index)
@@ -62,10 +69,26 @@ namespace DSA.Lab04B
 
         private void SiftDown(int index)
         {
-            // TODO:
-            // Compare the current entry with its children.
-            // If a child should come first, swap with the smaller-priority child.
-            throw new NotImplementedException();
+            var priority = _heap[index].Priority;
+            var leftIndex = LeftChildIndex(index);
+            var rightIndex = RightChildIndex(index);
+            while (rightIndex < Count)
+            {
+                var swap = _heap[rightIndex].Priority < _heap[leftIndex].Priority ? rightIndex : leftIndex;
+                if (priority <= _heap[swap].Priority)
+                {
+                    return;
+                }
+                Swap(index, swap);
+                index = swap;
+                leftIndex = LeftChildIndex(index);
+                rightIndex = RightChildIndex(index);
+
+            }
+            if (leftIndex < Count && priority > _heap[leftIndex].Priority)
+            {
+                Swap(index, leftIndex);
+            }
         }
 
         private static int ParentIndex(int index)
