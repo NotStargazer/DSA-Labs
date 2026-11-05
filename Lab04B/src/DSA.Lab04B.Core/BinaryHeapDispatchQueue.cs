@@ -19,10 +19,15 @@ namespace DSA.Lab04B
 
         public void Enqueue(T item, int priority)
         {
-            // TODO:
-            // 1. Append the new entry at the end.
-            // 2. Restore the heap invariant upward.
-            throw new NotImplementedException();
+            var i = _heap.Count;
+            var pi = ParentIndex(i);
+            _heap.Add(new PriorityEntry<T>(item, priority));
+            while (priority < _heap[pi].Priority)
+            {
+                Swap(i, pi);
+                i = pi;
+                pi = ParentIndex(i);
+            }
         }
 
         public PriorityEntry<T> PeekNext()
