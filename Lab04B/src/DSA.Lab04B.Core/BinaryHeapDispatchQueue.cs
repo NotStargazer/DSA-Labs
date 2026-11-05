@@ -19,14 +19,11 @@ namespace DSA.Lab04B
 
         public void Enqueue(T item, int priority)
         {
-            var i = _heap.Count;
-            var pi = ParentIndex(i);
+            var i = Count;
             _heap.Add(new PriorityEntry<T>(item, priority));
-            while (priority < _heap[pi].Priority)
+            if (Count > 1)
             {
-                Swap(i, pi);
-                i = pi;
-                pi = ParentIndex(i);
+                SiftUp(i);
             }
         }
 
@@ -53,8 +50,14 @@ namespace DSA.Lab04B
 
         private void SiftUp(int index)
         {
-            // TODO: compare the entry with its parent and swap while needed.
-            throw new NotImplementedException();
+            var parentIndex = ParentIndex(index);
+            var priority = _heap[index].Priority;
+            while (priority < _heap[parentIndex].Priority)
+            {
+                Swap(index, parentIndex);
+                index = parentIndex;
+                parentIndex = ParentIndex(index);
+            }
         }
 
         private void SiftDown(int index)
