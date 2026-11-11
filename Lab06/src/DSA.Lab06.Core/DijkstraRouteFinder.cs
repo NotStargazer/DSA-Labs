@@ -22,26 +22,46 @@ namespace DSA.Lab06
                 return RouteResult.Success(new[] { start }, 0, 0);
             }
 
-            var bestCost = new Dictionary<string, int>();
-            var cameFrom = new Dictionary<string, string>();
+            var bestCost = new Dictionary<string, int>(graph.NodeCount);
+            var cameFrom = new Dictionary<string, string>(graph.NodeCount);
             var frontier = new MinFrontier<string>();
 
             bestCost[start] = 0;
             frontier.Enqueue(start, 0);
 
-            int expandedNodes = 0;
+            var expandedNodes = 0;
 
-            // TODO Lab 6A:
-            // 1. Repeatedly remove the smallest-priority frontier candidate.
-            // 2. Ignore stale entries when a cheaper cost is already known.
-            // 3. Finalize/expand the current node.
-            // 4. If it is the goal, reconstruct the route using cameFrom.
-            // 5. Relax each outgoing edge:
-            //      candidate = bestCost[current] + edge.Cost
-            //    If candidate improves the known cost, update both bestCost and cameFrom,
-            //    then enqueue the neighbor with the improved total cost.
-            //
-            // Implement one small piece at a time and run the relevant tests.
+            while (frontier.Count > 0)
+            {
+                var next = frontier.Dequeue();
+                expandedNodes++;
+                foreach (var edge in graph.GetOutgoing(next.Value))
+                {
+                    var totalCost = bestCost[edge.From] + edge.Cost;
+                    if (bestCost.TryAdd(edge.To, totalCost))
+                    {
+                        cameFrom[edge.To] = edge.From;
+                        frontier.Enqueue(edge.To, totalCost);
+                    }
+                    if (totalCost < bestCost[edge.To])
+                    {
+                        bestCost[edge.To] = totalCost;
+                        cameFrom[edge.To] = edge.From;
+                    }
+                }
+            }
+
+            if (bestCost.TryGetValue(goal, out var cost))
+            {
+                var route = new List<string>(graph.NodeCount) { goal };
+                for (var p = cameFrom[goal]; p != start; p = cameFrom[p])
+                {
+                    route.Add(p);
+                }
+                route.Add(start);
+                route.Reverse();
+                return RouteResult.Success(route, cost, expandedNodes);
+            }
 
             return RouteResult.NotFound(expandedNodes);
         }
