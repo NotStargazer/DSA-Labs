@@ -33,9 +33,13 @@ namespace DSA.Lab06
 
             while (frontier.Count > 0)
             {
-                var next = frontier.Dequeue();
+                var current = frontier.Dequeue();
+                if (current.Value == goal)
+                {
+                    return ReconstructPath(graph, cameFrom, start, goal, bestCost[goal], expandedNodes);
+                }
                 expandedNodes++;
-                foreach (var edge in graph.GetOutgoing(next.Value))
+                foreach (var edge in graph.GetOutgoing(current.Value))
                 {
                     var totalCost = bestCost[edge.From] + edge.Cost;
                     if (bestCost.TryAdd(edge.To, totalCost))
@@ -43,27 +47,33 @@ namespace DSA.Lab06
                         cameFrom[edge.To] = edge.From;
                         frontier.Enqueue(edge.To, totalCost);
                     }
-                    if (totalCost < bestCost[edge.To])
+                    else if (totalCost < bestCost[edge.To])
                     {
                         bestCost[edge.To] = totalCost;
                         cameFrom[edge.To] = edge.From;
                     }
                 }
             }
-
-            if (bestCost.TryGetValue(goal, out var cost))
-            {
-                var route = new List<string>(graph.NodeCount) { goal };
-                for (var p = cameFrom[goal]; p != start; p = cameFrom[p])
-                {
-                    route.Add(p);
-                }
-                route.Add(start);
-                route.Reverse();
-                return RouteResult.Success(route, cost, expandedNodes);
-            }
-
+            
             return RouteResult.NotFound(expandedNodes);
+        }
+
+        private RouteResult ReconstructPath(
+            WeightedGraph graph,
+            Dictionary<string, string> cameFrom,
+            string start,
+            string goal,
+            int cost,
+            int expandedNodes)
+        {
+            var route = new List<string>(graph.NodeCount) { goal };
+            for (var p = cameFrom[goal]; p != start; p = cameFrom[p])
+            {
+                route.Add(p);
+            }
+            route.Add(start);
+            route.Reverse();
+            return RouteResult.Success(route, cost, expandedNodes);
         }
     }
 }
